@@ -5,19 +5,20 @@ Node package for conducting textual analysis. The sentimentalyze method takes a 
 npm install --save sentiment-alyze
 
 ##Usage:
+```javascript
 var sA = require('sentiment-alyze'),
     string = 'This string is super awesome!',
     sentimentScore = sA.sentimentalyze(string),
     termFrequency  = sA.termFrequency(string),
     termFrequencyNoStopWords = sA.termFrequency(string, {stopWords: 'no'});
     
-console.log('sentiment score ', sentimentScore, 'term frequency, all words ', termFrequency, 'term frequency, no stop words ', termFrequencyNoStopWords);
-
+    console.log('sentiment score ', sentimentScore, 'term frequency, all words ', termFrequency, 'term frequency, no stop words ', termFrequencyNoStopWords);
+```
 ##Tests
 
 npm test
 
-##Contributing
+###Contributing
 
 Fork, clone, lint, test, pull :-)
 
