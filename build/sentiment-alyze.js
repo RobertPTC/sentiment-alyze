@@ -1,3 +1,5 @@
+/*
+sentiment-alyze 0.0.0- Textual analysis tools for JavaScript.ngit://github.com/RobertPTC/sentiment-alyze.gitnBuilt on 2015-05-18n*/
 var dict = require('./afinn_sync.js'),
     stopWords = require('./stop_words.js');
 module.exports = {
