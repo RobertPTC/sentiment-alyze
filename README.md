@@ -22,3 +22,5 @@ npm test
 
 Fork, clone, lint, test, pull :-)
 
+###Release History
+* 0.1.0 Initial Release
