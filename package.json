@@ -1,0 +1,22 @@
+{
+  "name": "sentiment-alyze",
+  "version": "0.0.0",
+  "description": "Textual analysis tools for JavaScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/RobertPTC/sentiment-alyze.git"
+  },
+  "author": "Robert Cunningham <rptc3000@gmail.com>",
+  "license": "The MIT License",
+  "bugs": {
+    "url": "https://github.com/RobertPTC/sentiment-alyze/issues"
+  },
+  "devDependencies": {
+    "mocha": "~2.2.5",
+    "chai": "~2.3.0"
+  }
+}
