@@ -23,6 +23,6 @@ describe('Sentiment score analyzer', function() {
   it('should calculate sentiment score', function() {
     var phrase = "This is awesome, bastard!",
         sentimentScore = sA.sentimentalyze(phrase);
-    expect(sentimentScore).to.equal(1);
+    expect(sentimentScore).to.equal(-1);
   });
 });

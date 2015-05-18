@@ -19,7 +19,6 @@ module.exports = {
     var phrase = this.parsePunc(phrase),
         phrase = this.lowercase(phrase),
         phrase = this.wordArray(phrase),
-        dict = this.dict(),
         score = 0;
     for (i in phrase) {
       if (phrase[i] in dict) {
