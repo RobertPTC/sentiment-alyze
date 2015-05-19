@@ -1,7 +1,7 @@
 var fs = require('fs'),
-    path = require('path'),
-    root = path.dirname(require.main.filename),
-    file = root + '/node_modules/sentiment-alyze/AFINN-111.txt';
+    // path = require('path'),
+    // root = path.dirname(require.main.filename),
+    file = 'AFINN-111.txt';
 module.exports = (function() {
     text = fs.readFileSync(file).toString();
     text = text.toString().split(" ");
