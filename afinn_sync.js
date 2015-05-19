@@ -1,9 +1,6 @@
-var fs = require('fs'),
-    // path = require('path'),
-    // root = path.dirname(require.main.filename),
-    file = 'AFINN-111.txt';
+var fs = require('fs');
 module.exports = (function() {
-    text = fs.readFileSync(file).toString();
+    text = fs.readFileSync(__dirname + '/AFINN-111.txt').toString();
     text = text.toString().split(" ");
     text = text[0].split("\n");
     dict = {};
