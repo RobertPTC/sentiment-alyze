@@ -27,6 +27,13 @@ describe('Sentiment score analyzer', function() {
         sentimentScore = sA.sentimentalyze(phrase);
     expect(sentimentScore).to.equal(-1);
   });
+
+  it('should reverse the score of words that follow a negative', function() {
+    var phrase = 'This is not awesome, bastard!',
+        sentimentScore = sA.sentimentalyze(phrase, {negate: 'yes'});
+    expect(sentimentScore).to.equal(-9);
+  });
+  
 describe('Term frequency', function() {
   it('should count the frequency of terms in a string', function() {
     var phrase = 'This is an awesome awesome awesome string string!',
