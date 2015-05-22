@@ -1,7 +1,8 @@
 /*
-sentiment-alyze 0.0.0- Textual analysis tools for JavaScript.ngit://github.com/RobertPTC/sentiment-alyze.gitnBuilt on 2015-05-18n*/
+sentiment-alyze 0.1.2- Textual analysis tools for JavaScript.ngit://github.com/RobertPTC/sentiment-alyze.gitnBuilt on 2015-05-21n*/
 var dict = require('./afinn_sync.js'),
-    stopWords = require('./stop_words.js');
+    stopWords = require('./stop_words.js'),
+    negatives = ['not', 'no', 'nor'];
 module.exports = {
 
   parsePunc: function(phrase) {
@@ -24,14 +25,39 @@ module.exports = {
     return phrase2;
   },
 
-  sentimentalyze: function(phrase) {
+  sentimentalyze: function(phrase, options) {
+    if (options && options.negate === 'yes') {
+      return this.createScoreNegatives(phrase);
+    }
+    else {
+      return this.createScore(phrase);
+    }
+  },
+
+  createScore: function(phrase) {
     var parsedPhrase = this.parsePhrase(phrase),
         score = 0;
     for (var i in parsedPhrase) {
       if (parsedPhrase[i] in dict) {
         score += dict[parsedPhrase[i]];
+        }
       }
-    }
+    return score;
+  },
+
+  createScoreNegatives: function(phrase) {
+    var parsedPhrase = this.parsePhrase(phrase),
+        score = 0,
+        nein = false;
+    for (var i in parsedPhrase) {
+      if (negatives.indexOf(parsedPhrase[i]) !== -1) {
+        nein = true;
+      }
+      if (parsedPhrase[i] in dict) {
+        score += nein ? -1 * dict[parsedPhrase[i]] : dict[parsedPhrase[i]];
+        nein = false;
+        }
+      }
     return score;
   },
 

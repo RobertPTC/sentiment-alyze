@@ -1,6 +1,6 @@
 var dict = require('./afinn_sync.js'),
     stopWords = require('./stop_words.js'),
-    negatives = ['not', 'no', 'nor']
+    negatives = ['not', 'no', 'nor'];
 module.exports = {
 
   parsePunc: function(phrase) {
