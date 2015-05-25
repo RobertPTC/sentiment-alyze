@@ -17,7 +17,7 @@ var sA = require('sentiment-alyze'),
     sentimentScore = sA.sentimentalyze(string),
     termFrequency  = sA.termFrequency(string),
     termFrequencyNoStopWords = sA.termFrequency(string, {stopWords: 'no'}),
-    termFrequencyPorterized = sA.termFrequency(string, {stopWords: 'no', porter: 'yes'});
+    termFrequencyPorterized = sA.termFrequency(string, {stopWords: 'no', stem: 'yes'});
     
     
     console.log('sentiment score ', sentimentScore, 'term frequency, all words ', termFrequency, 'term frequency, no stop words ', termFrequencyNoStopWords, 'porterized ', termFrequencyPorterized);
