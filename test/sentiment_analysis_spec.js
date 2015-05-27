@@ -72,6 +72,8 @@ describe('Term frequency', function() {
   });
   });
 describe('TF-IDF', function() {
-  var phrases = ['Virginia Woolf wrote ']
+  var phrases = ['Virginia Woolf wrote To the Lighthouse.'];
+      phrases.concat(['Virginia Woolf was an English author.']);
+      phrases.concat(['Virgina Woolf lived in London.'])
   });
 });
