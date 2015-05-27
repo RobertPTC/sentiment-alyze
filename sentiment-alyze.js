@@ -25,7 +25,26 @@ var dict = require('./afinn_sync.js'),
     return phrase2;
   };
 
+  function phraseArray(phrases) {
+    var objectArray = [];
+    for (var i in phrases) {
+      var sentimentObject = {},
+        phrase = phrases[i];
+        switch (arguments[1]) {
+          case 'score':
+            sentimentObject[phrase] = createScore(phrase);
+            break;
+          case 'negScore':
+            sentimentObject[phrase] = createScoreNegatives(phrase)
+            break;
+        }
+        objectArray.push(sentimentObject);
+      }
+      return objectArray;
+  };
+
   function createScore (phrase) {
+    if (typeof phrase === 'object') { return phraseArray(phrase, 'score'); }
     var parsedPhrase = parsePhrase(phrase),
         score = 0;
     for (var i in parsedPhrase) {
@@ -37,6 +56,7 @@ var dict = require('./afinn_sync.js'),
   };
 
   function createScoreNegatives (phrase) {
+    if (typeof phrase === 'object') { return phraseArray(phrase, 'negScore'); }
     var parsedPhrase = parsePhrase(phrase),
         score = 0,
         nein = false;

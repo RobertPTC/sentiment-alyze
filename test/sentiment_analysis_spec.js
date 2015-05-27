@@ -34,6 +34,14 @@ describe('Sentiment score analyzer', function() {
     expect(sentimentScore).to.equal(-9);
   });
 
+  it('should return an array of objects for multiple documents', function() {
+    var phrases = ['This is one awesome string'];
+        phrases.push('This is the second awesome string');
+        phrases.push('This is the third awesome string');
+    var sentimentScores = sA.sentimentalyze(phrases);
+    expect(sentimentScores).to.have.length(3);
+  });
+
 describe('Term frequency', function() {
   it('should count the frequency of terms in a string', function() {
     var phrase = 'This is an awesome awesome awesome string string!',
@@ -62,6 +70,8 @@ describe('Term frequency', function() {
         termFrequency = sA.termFrequency(phrase, options);
     expect(termFrequency.run).to.equal(3);
   });
-
+  });
+describe('TF-IDF', function() {
+  var phrases = ['Virginia Woolf wrote ']
   });
 });
