@@ -110,6 +110,10 @@ var dict = require('./afinn_sync.js'),
     return stemmedTF;
   };
 
+  function getBaseLog (x, y) {
+    return Math.log(y)/Math.log(x);
+  };
+
   var api =  {
 
   sentimentalyze: function(phrase, options) {
@@ -119,6 +123,32 @@ var dict = require('./afinn_sync.js'),
     else {
       return createScore(phrase);
     }
+  },
+
+  tfIDF: function(phrases) {
+    var tfIDF = {},
+        corpus = phrases.length;
+    for (var i in phrases) {
+      var TF = this.termFrequency(phrases[i]);
+      for (var j in TF) {
+        if (tfIDF[j]) {
+          tfIDF[j]['termFrequency'] += TF[j];
+          tfIDF[j]['documentCount'] += 1;
+        }
+        else {
+          tfIDF[j] = {};
+          tfIDF[j]['termFrequency'] = TF[j];
+          tfIDF[j]['documentCount'] = 1;
+          //hmm
+        }
+      }
+    }
+    for (var k in tfIDF) {
+      var tf = tfIDF[k]['termFrequency'],
+          dc = tfIDF[k]['documentCount'];
+      tfIDF[k] = tf * getBaseLog(10, (corpus/dc));
+    }
+    return tfIDF;
   },
 
   termFrequency: function(phrase, options) {
@@ -159,6 +189,7 @@ var dict = require('./afinn_sync.js'),
   api._parsePhrase = parsePhrase;
   api._createScore = createScore;
   api._createScoreNegatives = createScoreNegatives;
+  api._getBaseLog = getBaseLog;
   /* end-test-code */
 
   return api;

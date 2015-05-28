@@ -72,8 +72,18 @@ describe('Term frequency', function() {
   });
   });
 describe('TF-IDF', function() {
+  it('should calculate term frequency-inverse document frequency', function() {
+
   var phrases = ['Virginia Woolf wrote To the Lighthouse.'];
-      phrases.concat(['Virginia Woolf was an English author.']);
-      phrases.concat(['Virgina Woolf lived in London.']);
+      phrases = phrases.concat('Woolf was an English author from London.');
+      phrases = phrases.concat('Woolf lived in London. She loved London.');
+  var tfIDF = sA.tfIDF(phrases);
+  var getBaseLog = function(x,y) {
+    return Math.log(y)/Math.log(x);
+  };
+  //hmm
+
+  expect(tfIDF.author).to.equal(1*getBaseLog(10, 3));
+});
   });
 });
