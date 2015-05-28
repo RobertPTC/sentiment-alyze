@@ -139,7 +139,7 @@ var dict = require('./afinn_sync.js'),
           tfIDF[j] = {};
           tfIDF[j]['termFrequency'] = TF[j];
           tfIDF[j]['documentCount'] = 1;
-
+          //hmm
         }
       }
     }

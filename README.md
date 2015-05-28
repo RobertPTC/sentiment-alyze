@@ -27,6 +27,7 @@ var sA = require('sentiment-alyze'),
 
     console.log('sentiment score ', sentimentScore, 'term frequency, all words ', termFrequency, 'term frequency, no stop words ', termFrequencyNoStopWords, 'porterized ', termFrequencyPorterized);
     console.log('term frequency-inverse document frequency ', tfIDF);
+
 ```
 ##Tests
 

@@ -81,6 +81,7 @@ describe('TF-IDF', function() {
   var getBaseLog = function(x,y) {
     return Math.log(y)/Math.log(x);
   };
+  //hmm
 
   expect(tfIDF.author).to.equal(1*getBaseLog(10, 3));
 });
