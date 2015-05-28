@@ -17,10 +17,16 @@ var sA = require('sentiment-alyze'),
     sentimentScore = sA.sentimentalyze(string),
     termFrequency  = sA.termFrequency(string),
     termFrequencyNoStopWords = sA.termFrequency(string, {stopWords: 'no'}),
-    termFrequencyPorterized = sA.termFrequency(string, {stopWords: 'no', stem: 'yes'});
-    
-    
+    termFrequencyPorterized = sA.termFrequency(string, {stopWords: 'no', stem: 'yes'}),
+    phrases = [
+               'Virgina Woolf wrote To the Lighthouse',
+               'Virginia Woolf was an English author who lived in London.',
+               'Virginia Woolf lived in London. London was important to her. '],
+    tfIDF = sA.tfIDF(phrases);
+
+
     console.log('sentiment score ', sentimentScore, 'term frequency, all words ', termFrequency, 'term frequency, no stop words ', termFrequencyNoStopWords, 'porterized ', termFrequencyPorterized);
+    console.log('term frequency-inverse document frequency ', tfIDF);
 ```
 ##Tests
 
@@ -29,4 +35,3 @@ npm test - make sure you have mocha & chai installed;
 ###Contributing
 
 Fork, clone, lint, test, pull :-)
-
