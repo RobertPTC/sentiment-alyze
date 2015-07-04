@@ -6,7 +6,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jshint: {
-      files: ['Gruntfile.js', 'index.js', 'test/*.js'],
+      files: ['Gruntfile.js', 'index.js', 'lib/porter.js','test/*.js'],
       options: {
         maxlen: 80,
         quotmark: 'single'

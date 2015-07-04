@@ -68,7 +68,7 @@ describe('Term frequency', function() {
                     stem: 'yes'
                   },
         termFrequency = sA.termFrequency(phrase, options);
-    expect(termFrequency.run).to.equal(3);
+    expect(termFrequency.run + termFrequency.shop).to.equal(4);
   });
   });
 describe('TF-IDF', function() {
