@@ -31,7 +31,7 @@ var sA = require('sentiment-alyze'),
 ```
 ##Tests
 
-npm test - make sure you have mocha & chai installed;
+npm test;
 
 ###Contributing
 
