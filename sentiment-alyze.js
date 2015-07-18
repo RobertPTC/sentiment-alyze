@@ -3,7 +3,8 @@ module.exports = (function() {
 var dict = require('./afinn_sync.js'),
     stopWords = require('./stop_words.js'),
     negatives = ['not', 'no', 'nor'],
-    porter = require('./lib/porter.js');
+    porter = require('./lib/porter.js'),
+    api;
 
   function parsePunc (phrase) {
       var punc = /['!"#$%&\\'()\*+,\-\.\/:;<=>?@\[\\\]\^_`{|}~']/g;
@@ -114,7 +115,7 @@ var dict = require('./afinn_sync.js'),
     return Math.log(y)/Math.log(x);
   };
 
-  var api =  {
+  api =  {
 
   sentimentalyze: function(phrase, options) {
     if (options && options.negate === 'yes') {
