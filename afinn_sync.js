@@ -8,6 +8,7 @@ module.exports = (function() {
       elArray = el.split("\t");
       dict[elArray[0]] = parseInt(elArray[1]);
     });
+    delete dict[''];
     return dict;
   }
 )();
