@@ -126,11 +126,11 @@ var dict = require('./afinn_sync.js'),
     }
   },
 
-  tfIDF: function(phrases) {
+  tfIDF: function(phrases, options) {
     var tfIDF = {},
         corpus = phrases.length;
     for (var i in phrases) {
-      var TF = this.termFrequency(phrases[i]);
+      var TF = this.termFrequency(phrases[i], options);
       for (var j in TF) {
         if (tfIDF[j]) {
           tfIDF[j]['termFrequency'] += TF[j];
