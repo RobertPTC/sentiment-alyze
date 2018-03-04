@@ -2,29 +2,29 @@ module.exports = (function() {
 
 var dict = require('./afinn_sync.js'),
     stopWords = require('./stop_words.js'),
-    negatives = ['not', 'no', 'nor'],
+    negatives = ['not', 'no', 'nor', 'never'],
     porter = require('./lib/porter.js'),
     api;
 
   function parsePunc (phrase) {
       var punc = /['!"#$%&\\'()\*+,\-\.\/:;<=>?@\[\\\]\^_`{|}~']/g;
       return phrase.replace(punc,'');
-  };
+  }
 
   function lowercase (phrase) {
     return phrase.toLowerCase();
-  };
+  }
 
   function wordArray (phrase) {
     return phrase.split(' ');
-  };
+  }
 
   function parsePhrase(phrase) {
     var phrase0 = parsePunc(phrase),
         phrase1 = lowercase(phrase0),
         phrase2 = wordArray(phrase1);
     return phrase2;
-  };
+  }
 
   function phraseArray(phrases) {
     var objectArray = [];
@@ -36,13 +36,13 @@ var dict = require('./afinn_sync.js'),
             sentimentObject[phrase] = createScore(phrase);
             break;
           case 'negScore':
-            sentimentObject[phrase] = createScoreNegatives(phrase)
+            sentimentObject[phrase] = createScoreNegatives(phrase);
             break;
         }
         objectArray.push(sentimentObject);
       }
       return objectArray;
-  };
+  }
 
   function createScore (phrase) {
     if (typeof phrase === 'object') { return phraseArray(phrase, 'score'); }
@@ -54,7 +54,7 @@ var dict = require('./afinn_sync.js'),
         }
       }
     return score;
-  };
+  }
 
   function createScoreNegatives (phrase) {
     if (typeof phrase === 'object') { return phraseArray(phrase, 'negScore'); }
@@ -71,117 +71,139 @@ var dict = require('./afinn_sync.js'),
         }
       }
     return score;
-  };
+  }
 
-  function termFrequencyNoStopWords (phrase, TF) {
+  function wordCountNoStopWords (phrase, TF) {
+    TF.PHRASE_LENGTH = 0;
     for (var i in phrase) {
       if (TF[phrase[i]]) {
-        TF[phrase[i]]++;
+        TF.PHRASE_LENGTH++;
+        TF[phrase[i]].count++;
       }
       else if (stopWords.indexOf(phrase[i]) === -1) {
-        TF[phrase[i]] = 1;
-        }
-      }
-      return TF;
-    };
-
-  function termFrequencyAllWords (phrase, TF) {
-    for (var i in phrase) {
-      if (TF[phrase[i]]) {
-        TF[phrase[i]]++;
-      }
-      else {
-        TF[phrase[i]] = 1;
+        TF.PHRASE_LENGTH++;
+        TF[phrase[i]] = {};
+        TF[phrase[i]].count = 1;
       }
     }
-      return TF;
-  };
+    for (var term in TF) {
+      TF[term].tf = TF[term].count/TF.PHRASE_LENGTH;
+    }
+    return TF;
+  }
+
+  function wordCountAllWords (phrase, TF) {
+    TF.PHRASE_LENGTH = 0;
+    for (var i in phrase) {
+      TF.PHRASE_LENGTH++;
+      if (TF[phrase[i]]) {
+        TF[phrase[i]].count++;
+      }
+      else {
+        TF[phrase[i]] = {};
+        TF[phrase[i]].count = 1;
+      }
+    }
+    for (var term in TF) {
+      TF[term].tf = TF[term].count/TF.PHRASE_LENGTH;
+    }
+    return TF;
+  }
 
   function porterize (TF) {
     var stemmedTF = {};
     for (var i in TF) {
       var stemmedWord = porter(i);
       if (stemmedTF[stemmedWord]) {
-        stemmedTF[stemmedWord]++;
+        stemmedTF[stemmedWord].count++;
       }
       else {
-        stemmedTF[stemmedWord] = 1;
+        stemmedTF[stemmedWord] = {};
+        stemmedTF[stemmedWord].tf = i.tf;
+        stemmedTF[stemmedWord].count = 1;
       }
     }
     return stemmedTF;
-  };
+  }
 
   function getBaseLog (x, y) {
     return Math.log(y)/Math.log(x);
-  };
+  }
 
   api =  {
 
-  sentimentalyze: function(phrase, options) {
-    if (options && options.negate === 'yes') {
-      return createScoreNegatives(phrase);
-    }
-    else {
-      return createScore(phrase);
-    }
-  },
+    sentimentalyze: function(phrase, options) {
+      if (options && options.negate === 'yes') {
+        return createScoreNegatives(phrase);
+      }
+      else {
+        return createScore(phrase);
+      }
+    },
 
-  tfIDF: function(phrases, options) {
-    var tfIDF = {},
-        corpus = phrases.length;
-    for (var i in phrases) {
-      var TF = this.termFrequency(phrases[i], options);
-      for (var j in TF) {
-        if (tfIDF[j]) {
-          tfIDF[j]['termFrequency'] += TF[j];
-          tfIDF[j]['documentCount'] += 1;
-        }
-        else {
-          tfIDF[j] = {};
-          tfIDF[j]['termFrequency'] = TF[j];
-          tfIDF[j]['documentCount'] = 1;
-          //hmm
+    tfIDF: function(phrases, options) {
+      var tfIDF = {},
+          documentCount = {},
+          corpus = phrases.length;
+      for (var i = 0; i < corpus; i++) {
+        var TF = this.termFrequency(phrases[i], options);
+        tfIDF[i] = {};
+        for (var term in TF) {
+          if (documentCount[term]) {
+            documentCount[term].count++;
+          } else {
+            documentCount[term] = {};
+            documentCount[term].tfIDF = 0;
+            documentCount[term].count = 1;
+          }
+          tfIDF[i][term] = TF[term];
         }
       }
-    }
-    for (var k in tfIDF) {
-      var tf = tfIDF[k]['termFrequency'],
-          dc = tfIDF[k]['documentCount'];
-      tfIDF[k] = tf * getBaseLog(10, (corpus/dc));
-    }
-    return tfIDF;
-  },
-
-  termFrequency: function(phrase, options) {
-        var parsedPhrase = parsePhrase(phrase),
-          TF = {};
-          if (options) {
-            if (options.stopWords === 'no') {
-              if (options.stem === 'yes') {
-                TF = termFrequencyNoStopWords(parsedPhrase, TF);
-                TF = porterize(TF);
-                return TF;
-              }
-              else {
-                TF = termFrequencyNoStopWords(parsedPhrase, TF);
-                return TF;
-              }
-            }
-            else if (options.stem === 'yes') {
-              TF = termFrequencyAllWords(parsedPhrase, TF);
-              TF = porterize(TF);
-              return TF;
-              }
-            else {
-              TF = termFrequencyAllWords(parsedPhrase, TF);
-              return TF;
-            }
-          }
-        else {
-          TF = termFrequencyAllWords(parsedPhrase, TF);
-          return TF;
+      for (var doc in tfIDF) {
+        for (var tf in tfIDF[doc]) {
+          var termDocumentCount = documentCount[tf].count;
+          var termFrequency = tfIDF[doc][tf];
+          if (typeof termFrequency === 'object') {
+            var idf = getBaseLog(10, (corpus / termDocumentCount));
+            termFrequency.tfIDF = termFrequency.tf * idf;
+            documentCount[tf].tfIDF += termFrequency.tfIDF;
           }
         }
+      }
+      return documentCount;
+    },
+
+    termFrequency: function(phrase, options) {
+        var parsedPhrase = parsePhrase(phrase),
+            phraseLength = parsedPhrase.length,
+            TF = {};
+        if (options) {
+          if (options.stopWords === 'no') {
+            if (options.stem === 'yes') {
+              TF = wordCountNoStopWords(parsedPhrase, TF);
+              TF = porterize(TF);
+              return TF;
+            }
+            else {
+              TF = wordCountNoStopWords(parsedPhrase, TF);
+              return TF;
+            }
+          }
+          else if (options.stem === 'yes') {
+            TF = wordCountAllWords(parsedPhrase, TF);
+            TF = porterize(TF);
+            return TF;
+          }
+          else {
+            TF = wordCountAllWords(parsedPhrase, TF);
+            return TF;
+          }
+        }
+        else {
+          TF = wordCountAllWords(parsedPhrase, TF);
+          return TF;
+        }
+      }
   };
   /*test code*/
   api._parsePunc = parsePunc;

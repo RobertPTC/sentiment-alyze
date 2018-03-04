@@ -1,5 +1,5 @@
 var expect = require('chai').expect,
-    sA = require('../sentiment-alyze.js');
+    sA = require('../index.js');
 
 describe('Sentiment score analyzer', function() {
   it('should remove all punctuation from a phrase', function() {
@@ -42,23 +42,23 @@ describe('Sentiment score analyzer', function() {
     expect(sentimentScores).to.have.length(3);
   });
 
-describe('Term frequency', function() {
-  it('should count the frequency of terms in a string', function() {
+describe('Word count', function() {
+  it('should count the occurence of terms in a string', function() {
     var phrase = 'This is an awesome awesome awesome string string!',
         termFrequency = sA.termFrequency(phrase),
-        totalCount = termFrequency.awesome + termFrequency.string;
-        totalCount += termFrequency.this;
-        totalCount += termFrequency.is;
-        totalCount += termFrequency.an;
+        totalCount = termFrequency.awesome.count + termFrequency.string.count;
+        totalCount += termFrequency.this.count;
+        totalCount += termFrequency.is.count;
+        totalCount += termFrequency.an.count;
     expect(totalCount).to.equal(8);
     });
   it('should filter out stop words when option is passed', function() {
     var phrase = 'This is an awesome string!',
         termFrequency = sA.termFrequency(phrase, {stopWords: 'no'});
-    var totalCount = termFrequency.awesome + termFrequency.string;
-        if (termFrequency.this) totalCount += termFrequency.this;
-        if (termFrequency.is) totalCount += termFrequency.is;
-        if (termFrequency.an) totalCount += termFrequency.an;
+    var totalCount = termFrequency.awesome.count + termFrequency.string.count;
+        if (termFrequency.this) totalCount += termFrequency.this.count;
+        if (termFrequency.is) totalCount += termFrequency.is.count;
+        if (termFrequency.an) totalCount += termFrequency.an.count;
     expect(totalCount).to.equal(2);
     });
   it('should stem words if option is passed', function() {
@@ -68,22 +68,34 @@ describe('Term frequency', function() {
                     stem: 'yes'
                   },
         termFrequency = sA.termFrequency(phrase, options);
-    expect(termFrequency.run + termFrequency.shop).to.equal(4);
+    expect(termFrequency.run.count + termFrequency.shop.count).to.equal(4);
   });
+  it('should contain the length of the phrase with no stop words', function() {
+    var phrase = 'This is an awesome string!',
+        termFrequency = sA.termFrequency(phrase, {stopWords: 'no'});
+    var totalCount = termFrequency.PHRASE_LENGTH;
+    expect(totalCount).to.equal(2);
   });
+  it('should contain the length of the phrase with stop words', function() {
+    var phrase = 'This is an awesome awesome awesome string string!',
+        termFrequency = sA.termFrequency(phrase),
+        totalCount = termFrequency.PHRASE_LENGTH;
+    expect(totalCount).to.equal(8);
+  });
+});
 describe('TF-IDF', function() {
   it('should calculate term frequency-inverse document frequency', function() {
 
-  var phrases = ['Virginia Woolf wrote To the Lighthouse.'];
+  var phrases = ['Virginia Woolf was an author and wrote To the Lighthouse.'];
       phrases = phrases.concat('Woolf was an English author from London.');
       phrases = phrases.concat('Woolf lived in London. She loved London.');
-  var tfIDF = sA.tfIDF(phrases);
+      phrases = phrases.concat('She was a wonderful author.');
+  var dictionary = sA.tfIDF(phrases, { stopWords: 'no' });
   var getBaseLog = function(x,y) {
     return Math.log(y)/Math.log(x);
   };
-  //hmm
 
-  expect(tfIDF.author).to.equal(1*getBaseLog(10, 3));
+  expect(dictionary.wonderful.tfIDF).to.equal(0.30102999566398114);
 });
   });
 });
