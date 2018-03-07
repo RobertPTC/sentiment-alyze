@@ -7,10 +7,10 @@ Porter stemming algorithm reduces tokens to base, e.g. 'run', 'running', and 'ru
 
 Values of words in AFINN-111 range between -5 and +5.
 
-##Installation:
+## Installation:
 npm install --save sentiment-alyze
 
-##Usage:
+## Usage:
 ```javascript
 var sA = require('sentiment-alyze'),
     string = 'This string is super awesome! I feel like running and shopping',
@@ -29,10 +29,10 @@ var sA = require('sentiment-alyze'),
     console.log('term frequency-inverse document frequency ', tfIDF);
 
 ```
-##Tests
+## Tests
 
 npm test;
 
-###Contributing
+### Contributing
 
 Fork, clone, lint, test, pull :-)
