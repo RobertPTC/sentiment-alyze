@@ -1,5 +1,5 @@
 /*
-sentiment-alyze 1.4.7- Textual analysis tools for JavaScript.ngit://github.com/RobertPTC/sentiment-alyze.gitnBuilt on 2018-03-03n*/
+sentiment-alyze 2.0.0- Textual analysis tools for JavaScript.ngit://github.com/RobertPTC/sentiment-alyze.gitnBuilt on 2018-03-04n*/
 module.exports = (function() {
 
 var dict = require('./afinn_sync.js'),
@@ -164,17 +164,14 @@ var dict = require('./afinn_sync.js'),
       for (var doc in tfIDF) {
         for (var tf in tfIDF[doc]) {
           var termDocumentCount = documentCount[tf].count;
-          // console.log('termDocumentCount ', documentCount[tf]);
           var termFrequency = tfIDF[doc][tf];
           if (typeof termFrequency === 'object') {
             var idf = getBaseLog(10, (corpus / termDocumentCount));
             termFrequency.tfIDF = termFrequency.tf * idf;
             documentCount[tf].tfIDF += termFrequency.tfIDF;
           }
-          // console.log('term ', tfIDF[doc][tf]);
         }
       }
-      console.log('documentCount ', documentCount);
       return documentCount;
     },
 
@@ -191,6 +188,7 @@ var dict = require('./afinn_sync.js'),
             }
             else {
               TF = wordCountNoStopWords(parsedPhrase, TF);
+              console.log('TF ', TF);
               return TF;
             }
           }

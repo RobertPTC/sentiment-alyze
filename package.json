@@ -1,8 +1,8 @@
 {
   "name": "sentiment-alyze",
-  "version": "1.4.7",
+  "version": "2.0.0",
   "description": "Textual analysis tools for JavaScript.",
-  "main": "sentiment-alyze.js",
+  "main": "index.js",
   "scripts": {
     "test": "grunt test"
   },
